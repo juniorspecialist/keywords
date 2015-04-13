@@ -10,7 +10,7 @@ $config = [
 
     'bootstrap' => ['log','debug'],
 
-    'name'=>'Elastic search',
+    'name'=>'MYKEYWORDS.RU',
 
     'timeZone'=>'Europe/Moscow',
 
@@ -46,6 +46,17 @@ $config = [
             'enableAutoLogin' => true,
             'loginUrl' => ['user/default/login'],
         ],
+
+//        'view' => [
+//            'theme' => [
+//                'pathMap' => [
+//                    '@app/views' => [
+//                        '@webroot/themes/demo/views',
+//
+//                    ]
+//                ],
+//            ],
+//        ], // here demo is your folder name
 
         'elasticsearch' => [
             'class' => 'yii\elasticsearch\Connection',

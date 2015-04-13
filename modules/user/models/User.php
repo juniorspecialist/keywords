@@ -2,6 +2,7 @@
 
 namespace app\modules\user\models;
 
+use app\models\Tasks;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
@@ -33,6 +34,11 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $statuses = self::getStatusesArray();
         return isset($statuses[$this->status]) ? $statuses[$this->status] : '';
+    }
+
+    public function getOrders()
+    {
+        return $this->hasMany(Tasks::className(), ['user_id' => 'id']);
     }
 
     public static function getStatusesArray()

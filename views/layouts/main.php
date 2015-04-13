@@ -39,6 +39,11 @@ AppAsset::register($this);
                     ['label' => 'Главная', 'url' => ['/site/index']],
                     ['label' => 'О нас', 'url' => ['/site/about']],
                     ['label' => 'Контакты', 'url' => ['/site/contact']],
+
+                    ['label' => 'Задания',
+                        'url' => ['/tasks/'],
+                        'visible'=>!Yii::$app->user->isGuest],
+
                     Yii::$app->user->isGuest ?
                         ['label' => 'Регистрация', 'url' => ['/user/default/signup']] :
                         '',
@@ -46,7 +51,9 @@ AppAsset::register($this);
                         ['label' => 'Авторизация', 'url' => ['/user/default/login']] :
                         ['label' => 'Выход (' . Yii::$app->user->identity->username . ')',
                             'url' => ['/user/default/logout'],
-                            'linkOptions' => ['data-method' => 'post']]
+                            'linkOptions' => ['data-method' => 'post']],
+
+
                 ],
             ]);
             NavBar::end();
@@ -63,8 +70,7 @@ AppAsset::register($this);
 
     <footer class="footer">
         <div class="container">
-            <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-            <p class="pull-right"><?= Yii::powered() ?></p>
+            <p class="pull-left">&copy;MYKEYWORDS.RU <?= date('Y') ?></p>
         </div>
     </footer>
 
