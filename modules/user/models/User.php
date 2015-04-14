@@ -66,12 +66,12 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['username', 'required'],
             ['username', 'match', 'pattern' => '#^[\w_-]+$#i'],
-            ['username', 'unique', 'targetClass' => self::className(), 'message' => 'This username has already been taken.'],
+            ['username', 'unique', 'targetClass' => self::className(), 'message' => 'Это имя пользователя уже занято.'],
             ['username', 'string', 'min' => 2, 'max' => 255],
 
             ['email', 'required'],
             ['email', 'email'],
-            ['email', 'unique', 'targetClass' => self::className(), 'message' => 'This email address has already been taken.'],
+            ['email', 'unique', 'targetClass' => self::className(), 'message' => 'Этот адрес почты уже занят.'],
             ['email', 'string', 'max' => 255],
 
             ['status', 'integer'],
@@ -102,6 +102,26 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             TimestampBehavior::className(),
         ];
+    }
+
+    /*
+     * get list admins from params list
+     */
+    public function getAdmins(){
+        return Yii::$app->params['admins'];
+    }
+
+    /*
+     * check is admin user or not
+     */
+    public function isAdmin(){
+        if(!Yii::$app->user->isGuest){
+            if(in_array(Yii::$app->user->identity->username, Yii::$app->user->identity->admins)){
+                return true;
+            }
+        }
+
+        return false;
     }
 
 

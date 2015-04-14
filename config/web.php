@@ -45,18 +45,8 @@ $config = [
             'identityClass' => 'app\modules\user\models\User',
             'enableAutoLogin' => true,
             'loginUrl' => ['user/default/login'],
+            //'admins'=>['admin'],
         ],
-
-//        'view' => [
-//            'theme' => [
-//                'pathMap' => [
-//                    '@app/views' => [
-//                        '@webroot/themes/demo/views',
-//
-//                    ]
-//                ],
-//            ],
-//        ], // here demo is your folder name
 
         'elasticsearch' => [
             'class' => 'yii\elasticsearch\Connection',
@@ -75,17 +65,17 @@ $config = [
 //                '<_m:[\w\-]+>' => '<_m>/default/index',
 //                '<_a:error>' => 'main/default/<_a>',
                 '<_a:(login|logout|signup|confirm-email|request-password-reset|reset-password)>' => 'user/default/<_a>',
-                '<_m:[\w\-]+>/<_c:[\w\-]+>/<_a:[\w\-]+>/<id:\d+>' => '<_m>/<_c>/<_a>',
-                '<_m:[\w\-]+>/<_c:[\w\-]+>/<id:\d+>' => '<_m>/<_c>/view',
+//                '<_m:[\w\-]+>/<_c:[\w\-]+>/<_a:[\w\-]+>/<id:\d+>' => '<_m>/<_c>/<_a>',
+//                '<_m:[\w\-]+>/<_c:[\w\-]+>/<id:\d+>' => '<_m>/<_c>/view',
 //                '<_m:[\w\-]+>' => '<_m>/default/index',
 //                '<_m:[\w\-]+>/<_c:[\w\-]+>' => '<_m>/<_c>/index',
 
                 '<controller:\w+>/page/<page:\d+>' => '<controller>/index',
-                '<controller:\w+>/<id:\d+>' => '<controller>/view',
+//                '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
-                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
-                '<module:\w+>/<controller:\w+>/<action:\w+>'=>'<module>/<controller>/<action>',
-                '<module:\w+>/<controller:\w+>/'=>'<module>/<controller>/index',
+//                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+//                '<module:\w+>/<controller:\w+>/<action:\w+>'=>'<module>/<controller>/<action>',
+                '<controller:\w+>/'=>'<controller>/index',
             ],
         ],
 
@@ -96,10 +86,6 @@ $config = [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
-//        'user' => [
-//            'identityClass' => 'app\models\User',
-//            //'loginUrl' => ['usr/login'],
-//        ],
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],

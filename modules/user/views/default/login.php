@@ -15,7 +15,7 @@ use yii\bootstrap\ActiveForm;
 $this->title = 'Авторизация';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="user-default-login">
+<div class="form-box" id="login-box">
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>Пожалуйста заполните поля для авторизации:</p>
