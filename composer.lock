@@ -4,54 +4,8 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0a0c9be82fe5426a01f5c74a2bab18bb",
+    "hash": "80196f5819936f25a3f622fb2af67ae3",
     "packages": [
-        {
-            "name": "bower-asset/admin-lte",
-            "version": "v2.0.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/almasaeed2010/AdminLTE.git",
-                "reference": "c25a8710f419a1be142f9b46037be00388a7272c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/almasaeed2010/AdminLTE/zipball/c25a8710f419a1be142f9b46037be00388a7272c",
-                "reference": "c25a8710f419a1be142f9b46037be00388a7272c",
-                "shasum": ""
-            },
-            "type": "bower-asset-library",
-            "extra": {
-                "bower-asset-main": [
-                    "index2.html",
-                    "dist/css/AdminLTE.css",
-                    "dist/js/app.js",
-                    "build/less/AdminLTE.less"
-                ],
-                "bower-asset-ignore": [
-                    "/.*",
-                    "node_modules",
-                    "bower_components",
-                    "composer.json",
-                    "documentaion"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "description": "Admin dashboard and control panel template",
-            "keywords": [
-                "admin",
-                "backend",
-                "bootstrap",
-                "css",
-                "html",
-                "js",
-                "responsive",
-                "template",
-                "theme"
-            ]
-        },
         {
             "name": "bower-asset/bootstrap",
             "version": "v3.3.4",
@@ -346,101 +300,58 @@
             "time": "2015-03-06 05:21:16"
         },
         {
-            "name": "cebe/yii2-gravatar",
-            "version": "1.1",
-            "target-dir": "cebe/gravatar",
+            "name": "elasticsearch/elasticsearch",
+            "version": "v2.0.0-beta2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/cebe/yii2-gravatar.git",
-                "reference": "c9c01bd14c9bdee9e5ae1ef1aad23f80c182c057"
+                "url": "https://github.com/elastic/elasticsearch-php.git",
+                "reference": "b63e3916a028ce5262cc9ccad0d0bb3a12979a9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cebe/yii2-gravatar/zipball/c9c01bd14c9bdee9e5ae1ef1aad23f80c182c057",
-                "reference": "c9c01bd14c9bdee9e5ae1ef1aad23f80c182c057",
+                "url": "https://api.github.com/repos/elastic/elasticsearch-php/zipball/b63e3916a028ce5262cc9ccad0d0bb3a12979a9b",
+                "reference": "b63e3916a028ce5262cc9ccad0d0bb3a12979a9b",
                 "shasum": ""
             },
             "require": {
-                "yiisoft/yii2": "*"
+                "guzzlehttp/ringphp": "~1.0",
+                "php": ">=5.4",
+                "psr/log": "~1.0"
             },
-            "type": "yii2-extension",
-            "autoload": {
-                "psr-0": {
-                    "cebe\\gravatar\\": ""
-                }
+            "require-dev": {
+                "athletic/athletic": "~0.1",
+                "cpliakas/git-wrapper": "~1.0",
+                "mockery/mockery": "dev-master@dev",
+                "phpunit/phpunit": "3.7.*",
+                "symfony/yaml": "2.4.3 as 2.4.2",
+                "twig/twig": "1.*"
             },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Carsten Brandt",
-                    "email": "mail@cebe.cc",
-                    "homepage": "http://cebe.cc/",
-                    "role": "Core framework development"
-                }
-            ],
-            "description": "Gravatar Widget for Yii 2",
-            "keywords": [
-                "gravatar",
-                "yii"
-            ],
-            "time": "2013-12-10 17:49:58"
-        },
-        {
-            "name": "dmstr/yii2-adminlte-asset",
-            "version": "2.0.0-beta1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dmstr/yii2-adminlte-asset.git",
-                "reference": "9a25d890d123ea1c44d76725a899d097e7842861"
+            "suggest": {
+                "ext-curl": "*",
+                "monolog/monolog": "Allows for client-level logging and tracing"
             },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dmstr/yii2-adminlte-asset/zipball/9a25d890d123ea1c44d76725a899d097e7842861",
-                "reference": "9a25d890d123ea1c44d76725a899d097e7842861",
-                "shasum": ""
-            },
-            "require": {
-                "bower-asset/admin-lte": "~2.0",
-                "cebe/yii2-gravatar": "1.*",
-                "rmrevin/yii2-fontawesome": "2.9.*",
-                "yiisoft/yii2": "2.*",
-                "yiisoft/yii2-bootstrap": "2.*"
-            },
-            "type": "yii2-extension",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0.x-dev"
-                }
-            },
+            "type": "library",
             "autoload": {
                 "psr-4": {
-                    "dmstr\\": ""
+                    "Elasticsearch\\": "src/Elasticsearch/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-3-Clause"
+                "Apache 2"
             ],
             "authors": [
                 {
-                    "name": "Tobias Munk",
-                    "email": "tobias@diemeisterei.de"
-                },
-                {
-                    "name": "Evgeniy Tkachenko",
-                    "email": "et.coder@gmail.com"
+                    "name": "Zachary Tong"
                 }
             ],
-            "description": "Backend theme for Yii2 Framework",
+            "description": "PHP Client for Elasticsearch",
             "keywords": [
-                "AdminLTE",
-                "extension",
-                "yii2"
+                "client",
+                "elasticsearch",
+                "search"
             ],
-            "time": "2015-04-06 07:43:36"
+            "time": "2015-04-09 21:35:32"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -487,76 +398,85 @@
             "time": "2013-11-30 08:25:19"
         },
         {
-            "name": "fortawesome/font-awesome",
-            "version": "v4.3.0",
+            "name": "guzzlehttp/ringphp",
+            "version": "1.0.7",
             "source": {
                 "type": "git",
-                "url": "https://github.com/FortAwesome/Font-Awesome.git",
-                "reference": "41b9ed01103e6820c3cb043ba7ddab30ecd3f4c0"
+                "url": "https://github.com/guzzle/RingPHP.git",
+                "reference": "52d868f13570a9a56e5fce6614e0ec75d0f13ac2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FortAwesome/Font-Awesome/zipball/41b9ed01103e6820c3cb043ba7ddab30ecd3f4c0",
-                "reference": "41b9ed01103e6820c3cb043ba7ddab30ecd3f4c0",
+                "url": "https://api.github.com/repos/guzzle/RingPHP/zipball/52d868f13570a9a56e5fce6614e0ec75d0f13ac2",
+                "reference": "52d868f13570a9a56e5fce6614e0ec75d0f13ac2",
                 "shasum": ""
             },
+            "require": {
+                "guzzlehttp/streams": "~3.0",
+                "php": ">=5.4.0",
+                "react/promise": "~2.0"
+            },
             "require-dev": {
-                "jekyll": "1.0.2",
-                "lessc": "1.4.2"
+                "ext-curl": "*",
+                "phpunit/phpunit": "~4.0"
+            },
+            "suggest": {
+                "ext-curl": "Guzzle will use specific adapters if cURL is present"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.0.x-dev"
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\Ring\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "OFL-1.1",
                 "MIT"
             ],
             "authors": [
                 {
-                    "name": "Dave Gandy",
-                    "email": "dave@fontawesome.io",
-                    "homepage": "http://twitter.com/davegandy",
-                    "role": "Developer"
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
                 }
             ],
-            "description": "The iconic font and CSS framework",
-            "homepage": "http://fontawesome.io/",
-            "keywords": [
-                "FontAwesome",
-                "awesome",
-                "bootstrap",
-                "font",
-                "icon"
-            ],
-            "time": "2015-01-22 18:09:42"
+            "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
+            "time": "2015-03-30 01:43:20"
         },
         {
-            "name": "rmrevin/yii2-fontawesome",
-            "version": "2.9.1",
+            "name": "guzzlehttp/streams",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/rmrevin/yii2-fontawesome.git",
-                "reference": "459c2337d1941be5bc10d94863661c8bb23cc3b7"
+                "url": "https://github.com/guzzle/streams.git",
+                "reference": "47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rmrevin/yii2-fontawesome/zipball/459c2337d1941be5bc10d94863661c8bb23cc3b7",
-                "reference": "459c2337d1941be5bc10d94863661c8bb23cc3b7",
+                "url": "https://api.github.com/repos/guzzle/streams/zipball/47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5",
+                "reference": "47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5",
                 "shasum": ""
             },
             "require": {
-                "fortawesome/font-awesome": "4.3.*",
-                "php": ">=5.4.0",
-                "yiisoft/yii2": "2.0.*"
+                "php": ">=5.4.0"
             },
-            "type": "yii2-extension",
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
-                    "rmrevin\\yii\\fontawesome\\": ""
+                    "GuzzleHttp\\Stream\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -565,20 +485,100 @@
             ],
             "authors": [
                 {
-                    "name": "Roman Revin",
-                    "email": "xgismox@gmail.com",
-                    "homepage": "http://rmrevin.ru/"
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
                 }
             ],
-            "description": "Asset Bundle for Yii2 with Font Awesome",
+            "description": "Provides a simple abstraction over streams of data",
+            "homepage": "http://guzzlephp.org/",
             "keywords": [
-                "asset",
-                "awesome",
-                "bundle",
-                "font",
-                "yii"
+                "Guzzle",
+                "stream"
             ],
-            "time": "2015-04-08 07:39:18"
+            "time": "2014-10-12 19:18:40"
+        },
+        {
+            "name": "psr/log",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/log.git",
+                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/fe0936ee26643249e916849d48e3a51d5f5e278b",
+                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Psr\\Log\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for logging libraries",
+            "keywords": [
+                "log",
+                "psr",
+                "psr-3"
+            ],
+            "time": "2012-12-21 11:40:51"
+        },
+        {
+            "name": "react/promise",
+            "version": "v2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/reactphp/promise.git",
+                "reference": "365fcee430dfa4ace1fbc75737ca60ceea7eeeef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/reactphp/promise/zipball/365fcee430dfa4ace1fbc75737ca60ceea7eeeef",
+                "reference": "365fcee430dfa4ace1fbc75737ca60ceea7eeeef",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "React\\Promise\\": "src/"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Sorgalla",
+                    "email": "jsorgalla@googlemail.com"
+                }
+            ],
+            "description": "A lightweight implementation of CommonJS Promises/A for PHP",
+            "time": "2014-12-30 13:32:42"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -1261,7 +1261,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "dmstr/yii2-adminlte-asset": 10
+        "elasticsearch/elasticsearch": 10
     },
     "prefer-stable": false,
     "prefer-lowest": false,

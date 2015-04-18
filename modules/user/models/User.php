@@ -74,8 +74,10 @@ class User extends ActiveRecord implements IdentityInterface
             ['email', 'unique', 'targetClass' => self::className(), 'message' => 'Этот адрес почты уже занят.'],
             ['email', 'string', 'max' => 255],
 
-            ['status', 'integer'],
+            [['status','balance'], 'integer'],
+
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
+
             ['status', 'in', 'range' => array_keys(self::getStatusesArray())],
         ];
     }
@@ -91,6 +93,7 @@ class User extends ActiveRecord implements IdentityInterface
             'username' => 'Имя пользователя',
             'email' => 'Email',
             'status' => 'Статус',
+            'balance'=>'Баланс'
         ];
     }
 

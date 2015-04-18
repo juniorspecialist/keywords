@@ -56,6 +56,8 @@ $config = [
             ],
         ],
 
+
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
@@ -94,6 +96,14 @@ $config = [
             'useFileTransport' => YII_DEBUG,
 //            'messageConfig' => [
 //                'from' => 'noreply@yoursite.com',
+//            ],
+//            'transport' => [
+//                'class' => 'Swift_SmtpTransport',
+//                'host' => 'smtp.yandex.ru',
+//                'username' => 'sample@yandex.ru',
+//                'password' => '*****',
+//                'port' => '587',
+//                'encryption' => 'tls',
 //            ],
         ],
         'log' => [
