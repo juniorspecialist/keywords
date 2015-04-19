@@ -2,6 +2,7 @@
 
 $params = require(__DIR__ . '/params.php');
 
+
 $config = [
 
     'id' => 'basic',
@@ -56,27 +57,14 @@ $config = [
             ],
         ],
 
-
-
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             //'enableStrictParsing' => false,
             'rules' => [
-
-//                '<_m:[\w\-]+>' => '<_m>/default/index',
-//                '<_a:error>' => 'main/default/<_a>',
                 '<_a:(login|logout|signup|confirm-email|request-password-reset|reset-password)>' => 'user/default/<_a>',
-//                '<_m:[\w\-]+>/<_c:[\w\-]+>/<_a:[\w\-]+>/<id:\d+>' => '<_m>/<_c>/<_a>',
-//                '<_m:[\w\-]+>/<_c:[\w\-]+>/<id:\d+>' => '<_m>/<_c>/view',
-//                '<_m:[\w\-]+>' => '<_m>/default/index',
-//                '<_m:[\w\-]+>/<_c:[\w\-]+>' => '<_m>/<_c>/index',
-
                 '<controller:\w+>/page/<page:\d+>' => '<controller>/index',
-//                '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
-//                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
-//                '<module:\w+>/<controller:\w+>/<action:\w+>'=>'<module>/<controller>/<action>',
                 '<controller:\w+>/'=>'<controller>/index',
             ],
         ],

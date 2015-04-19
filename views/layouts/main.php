@@ -26,6 +26,7 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
     <div class="wrap">
         <?php
+        //TODO переделать меню под нормальный вид
             NavBar::begin([
                 'brandLabel' => Yii::$app->name,
                 'brandUrl' => Yii::$app->homeUrl,
@@ -67,31 +68,10 @@ AppAsset::register($this);
             <?= Breadcrumbs::widget([
                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
             ]) ?>
+
             <?= Alert::widget() ?>
+
             <?= $content ?>
-
-            <?php
-
-
-            // http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-flt-query.html
-//            $query = \app\models\Bulk::find()->query([
-//                'regexp' => [
-//                    'word' => 'мульт.*|фильм.*|порн.*',
-//                ]
-//            ])->filter(['bool'=>['must_not'=>['terms'=>['word'=>['видео', 'скачать','лет','1','7']]]]]);
-//
-//            $count = $query->count(); // gives you all the documents
-//            echo 'count='.$count;
-
-
-
-            $model = \app\models\Tasks::findOne(5);
-
-            $bulk = new \app\models\Bulk();
-
-            $bulk->createQuery($model);
-
-            ?>
 
         </div>
     </div>

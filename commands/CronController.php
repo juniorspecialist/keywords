@@ -20,6 +20,7 @@ class CronController extends Controller{
 
     public $tasks_mutex_name = 'mutex_tasks';//ID файла блокировки для MUTEX
     public $result_file;//файл результата, куда запишим результат выборки из эластика
+    public $task_id;//ID задания которое мы выполняем
 
     /*
      * find task when user create for selecting
@@ -43,15 +44,29 @@ class CronController extends Controller{
 
         if (\Yii::$app->get('mutex')->acquire($this->tasks_mutex_name)) {
 
-            // business logic execution
+            //обернём в транзакцию все действия
+            $transaction = \Yii::$app->db->beginTransaction();
 
-            $this->log(true);
+            //укажим имя файла результата
+            $this->result_file = md5(time()).'.txt';
 
-            $this->TaskStart();
+            try {
 
-            //sleep(260);
+                // business logic execution
+                $this->log(true);
 
-            $this->TaskEnd();
+                $this->TaskStart();
+
+                $this->TaskEnd();
+
+                $transaction->commit();
+
+            } catch (Exception $e) {
+
+                $this->TaskError();
+
+                $transaction->rollBack();
+            }
 
         } else {
 
@@ -83,16 +98,16 @@ class CronController extends Controller{
         //находим первые в списке очереди задачи по выборке
         $task = $this->findTask();
 
-        //зафиксируем файл результата для дальнейшей записи
-        if(file_exists(\Yii::getAlias('@app/runtime/'.$task->id.'.txt'))){
-            unlink(\Yii::getAlias('@app/runtime/'.$task->id.'.txt'));
-        }
+        $this->task_id = $task->id;
 
-        $this->result_file = \Yii::getAlias('@app/runtime/'.$task->id.'.txt');
+        //удалим файл результата, если он существует
+        if(file_exists(\Yii::getAlias('@taskDirFile').$this->result_file)){
+            unlink((\Yii::getAlias('@taskDirFile').$this->result_file));
+        }
 
         $elastic = new Bulk();
 
-        $elastic->fileResult = \Yii::getAlias('@app/runtime/'.$task->id.'.txt');
+        $elastic->fileResult = \Yii::getAlias('@taskDirFile').$this->result_file;
 
         $elastic->createQuery($task);
 
@@ -100,12 +115,6 @@ class CronController extends Controller{
 
         unset($elastic->user_query);
     }
-
-    /*
-     * отправляем запрос в эластик
-     * получаем результаты
-     */
-
 
 
     /*
@@ -115,7 +124,32 @@ class CronController extends Controller{
     public function TaskEnd(){
 
         //обновим запись по заданию и укажем файл результата по ней
+        $query = \Yii::$app->db->createCommand('UPDATE '.Tasks::tableName().' SET status=:status, file_result=:file,complete_at=:complete_at WHERE id=:id');
 
+        $query->bindValues([':status'=>Tasks::STATUS_COMPLETE,':id'=>$this->task_id,':file'=>$this->result_file, ':complete_at'=>time()]);
+
+        $query->execute();
+
+        \Yii::$app->get('mutex')->release($this->tasks_mutex_name);
+    }
+
+    /*
+     * в ходе выполнения задания произошла ошибка, запишим в лог+ откатимся назад
+     */
+    public function TaskError(){
+
+        //запишим ошибку
+        $this->log('error');
+
+        //укажим, что задание на обработку выполнилось с ошибкой
+        $query = \Yii::$app->db->createCommand('UPDATE '.Tasks::tableName().' SET status=:status, complete_at=:complete_at WHERE id=:id');
+
+        $query->bindValues([':status'=>Tasks::STATUS_,':id'=>$this->task_id,':complete_at'=>time()]);
+
+        $query->execute();
+
+
+        //осовбодим очередь для след. задания
         \Yii::$app->get('mutex')->release($this->tasks_mutex_name);
     }
 
