@@ -34,6 +34,9 @@ AppAsset::register($this);
                     'class' => 'navbar-inverse navbar-fixed-top',
                 ],
             ]);
+
+
+
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
@@ -42,8 +45,20 @@ AppAsset::register($this);
                     ['label' => 'Контакты', 'url' => ['/site/contact']],
 
                     ['label' => 'Пользователи',
-                        'url' => ['/users/'],
-                        'visible'=>!Yii::$app->user->identity->isAdmin()],
+                        'url' => ['/user/default/admin/'],
+                        'visible'=>Yii::$app->user->identity && Yii::$app->user->identity->isAdmin()],
+
+                    [
+                        'label'=>'Профиль',
+                        'url'=>['/user/default/profil/'],
+                        'visible'=>!Yii::$app->user->isGuest,
+                    ],
+
+                    [
+                        'label'=>'Изменить пароль',
+                        'url'=>['/user/default/change-password/'],
+                        'visible'=>!Yii::$app->user->isGuest,
+                    ],
 
                     ['label' => 'Задания',
                         'url' => ['/tasks/'],

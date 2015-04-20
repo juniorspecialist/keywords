@@ -11,16 +11,18 @@ use app\models\Bulk;
 use app\models\KeyWord;
 use app\models\Word;
 use app\models\Tasks;
+use app\modules\user\models\User;
 use yii\console\Controller;
 use yii\console\Exception;
 use yii\helpers\Console;
+use app\models\Financy;
 
 class CronController extends Controller{
 
 
     public $tasks_mutex_name = 'mutex_tasks';//ID файла блокировки для MUTEX
     public $result_file;//файл результата, куда запишим результат выборки из эластика
-    public $task_id;//ID задания которое мы выполняем
+    public $task;//модель задания которое мы выполняем
 
     /*
      * find task when user create for selecting
@@ -96,20 +98,22 @@ class CronController extends Controller{
          */
 
         //находим первые в списке очереди задачи по выборке
-        $task = $this->findTask();
-
-        $this->task_id = $task->id;
+        $this->task = $this->findTask();
 
         //удалим файл результата, если он существует
         if(file_exists(\Yii::getAlias('@taskDirFile').$this->result_file)){
             unlink((\Yii::getAlias('@taskDirFile').$this->result_file));
         }
 
+        //изменим статус задания, чтобы пользователь УЖЕ не смог редактировать его
+        Tasks::setStatus($this->task->id, Tasks::STATUS_IN_PROGRESS);
+
+        //формируем запрос к эластику на выборку данных
         $elastic = new Bulk();
 
         $elastic->fileResult = \Yii::getAlias('@taskDirFile').$this->result_file;
 
-        $elastic->createQuery($task);
+        $elastic->createQuery($this->task);
 
         $elastic->resultToFile();
 
@@ -124,11 +128,35 @@ class CronController extends Controller{
     public function TaskEnd(){
 
         //обновим запись по заданию и укажем файл результата по ней
-        $query = \Yii::$app->db->createCommand('UPDATE '.Tasks::tableName().' SET status=:status, file_result=:file,complete_at=:complete_at WHERE id=:id');
+        $sql = 'UPDATE '.Tasks::tableName().' SET status=:status, file_result=:file, complete_at=:complete_at WHERE id=:id';
 
-        $query->bindValues([':status'=>Tasks::STATUS_COMPLETE,':id'=>$this->task_id,':file'=>$this->result_file, ':complete_at'=>time()]);
+        $query = \Yii::$app->db->createCommand($sql);
+
+        //спишим с баланса юзера сумма за выборку
+        $query->bindValues([':status'=>Tasks::STATUS_COMPLETE,':id'=>$this->task->id,':file'=>$this->result_file, ':complete_at'=>time()]);
 
         $query->execute();
+
+        //запишим операцию списания денег в лог фин. операций
+        $financy = new Financy();
+        $financy->sum_operation = \Yii::$app->params['task.cost'];
+        $financy->type_operation = Financy::TYPE_OPERATION_MINUS;
+        $financy->user_id = $this->task->user_id;
+        $financy->balance_user_after_operation = (int)($this->task->user->balance - \Yii::$app->params['task.cost']);
+
+        if($financy->validate()){
+
+            $financy->save();
+
+            //обновим баланс юзера
+            User::minusBalance($financy->user_id);
+
+        }else{
+
+            print_r($financy->errors).PHP_EOL;
+
+            $this->log('error');
+        }
 
         \Yii::$app->get('mutex')->release($this->tasks_mutex_name);
     }
@@ -144,10 +172,9 @@ class CronController extends Controller{
         //укажим, что задание на обработку выполнилось с ошибкой
         $query = \Yii::$app->db->createCommand('UPDATE '.Tasks::tableName().' SET status=:status, complete_at=:complete_at WHERE id=:id');
 
-        $query->bindValues([':status'=>Tasks::STATUS_,':id'=>$this->task_id,':complete_at'=>time()]);
+        $query->bindValues([':status'=>Tasks::STATUS_ERROR,':id'=>$this->task->id,':complete_at'=>time()]);
 
         $query->execute();
-
 
         //осовбодим очередь для след. задания
         \Yii::$app->get('mutex')->release($this->tasks_mutex_name);

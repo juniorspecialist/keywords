@@ -2,6 +2,7 @@
 
 namespace app\modules\user\models;
 
+use app\models\Financy;
 use app\models\Tasks;
 use Yii;
 use yii\db\ActiveRecord;
@@ -30,6 +31,8 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_ACTIVE = 1;
     const STATUS_WAIT = 2;
 
+    public $admin;
+
     public function getStatusName()
     {
         $statuses = self::getStatusesArray();
@@ -39,6 +42,14 @@ class User extends ActiveRecord implements IdentityInterface
     public function getOrders()
     {
         return $this->hasMany(Tasks::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFinancy()
+    {
+        return $this->hasMany(Financy::className(), ['id' => 'user_id']);
     }
 
     public static function getStatusesArray()
@@ -93,7 +104,20 @@ class User extends ActiveRecord implements IdentityInterface
             'username' => 'Имя пользователя',
             'email' => 'Email',
             'status' => 'Статус',
-            'balance'=>'Баланс'
+            'balance'=>'Баланс',
+            'statusname'=>'Статус',
+        ];
+    }
+
+    public function fields(){
+        return [
+            'email',
+//            'firstName' => 'first_name',
+//            'lastName' => 'last_name',
+            'statusname'=>'status',
+            'created_at' => function ($model) {
+                return date('Y-m-d H:i:s',$model->created_at);
+            },
         ];
     }
 
@@ -118,6 +142,16 @@ class User extends ActiveRecord implements IdentityInterface
      * check is admin user or not
      */
     public function isAdmin(){
+        if(!Yii::$app->user->isGuest){
+            if(in_array(Yii::$app->user->identity->username, Yii::$app->user->identity->admins)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getAdmin(){
         if(!Yii::$app->user->isGuest){
             if(in_array(Yii::$app->user->identity->username, Yii::$app->user->identity->admins)){
                 return true;
@@ -295,5 +329,22 @@ class User extends ActiveRecord implements IdentityInterface
     public function removeEmailConfirmToken()
     {
         $this->email_confirm_token = null;
+    }
+
+    /*
+     * minus sum from user balance
+     */
+    public static function minusBalance($user_id, $sum = 0){
+
+        //если не указали сумму, значит берём из настроек сумму за одну проверку и списываем её
+        if($sum==0){
+            $sum = \Yii::$app->params['task.cost'];
+        }
+
+        if($user_id){
+            $query = \Yii::$app->db->createCommand('UPDATE '.User::tableName().' SET balance=(balance-:sum_minus) WHERE id=:id');
+            $query->bindValues([':id'=>$user_id,':sum_minus'=>$sum]);
+            $query->execute();
+        }
     }
 }

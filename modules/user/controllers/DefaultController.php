@@ -2,6 +2,9 @@
 
 namespace app\modules\user\controllers;
 
+use app\modules\user\models\PasswordChangeForm;
+use app\modules\user\models\User;
+use app\modules\user\models\UserSearch;
 use yii\web\Controller;
 
 use app\modules\user\models\ConfirmEmailForm;
@@ -24,7 +27,7 @@ class DefaultController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
+                'only' => ['logout', 'signup','admin','profil'],
                 'rules' => [
                     [
                         'actions' => ['signup'],
@@ -32,9 +35,20 @@ class DefaultController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout','profil'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['admin'],
+                        'allow' => true,
+                        //'roles' => ['@'],
+                        'matchCallback' => function() {
+                            if(Yii::$app->user->identity && Yii::$app->user->identity->isAdmin()){
+                                return true;
+                            }
+                            return false;
+                        }
                     ],
                 ],
             ],
@@ -146,6 +160,55 @@ class DefaultController extends Controller
 
         return $this->render('resetPassword', [
             'model' => $model,
+        ]);
+    }
+
+    /*
+     * информация о профиле пользователя
+     */
+    public function actionProfil(){
+
+        $model = User::findOne(['id'=>Yii::$app->user->id]);
+
+        return $this->render('profil', [
+            'model' => $model,
+        ]);
+    }
+
+    /*
+     * смена пароля
+     */
+    public function actionChangePassword(){
+
+        $model = new PasswordChangeForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+            $model->setNewPassword();
+
+            Yii::$app->getSession()->setFlash('success', 'Спасибо! Успешно обновили пароль.');
+
+            return $this->refresh();
+
+        } else {
+            return $this->render('passwordChange', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    /*
+     * список всех пользователей системы
+     */
+    public function actionAdmin(){
+
+        $searchModel = new UserSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return
+            $this->render('users_table',[
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 }

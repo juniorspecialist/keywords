@@ -60,9 +60,15 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            //'enableStrictParsing' => false,
+            //'enableStrictParsing' => true,
             'rules' => [
-                '<_a:(login|logout|signup|confirm-email|request-password-reset|reset-password)>' => 'user/default/<_a>',
+
+                '' => 'site/index',
+                'about'=>'site/about',
+                'contact'=>'site/contact',
+
+                '<_a:(login|logout|signup|confirm-email|request-password-reset|reset-password|change-password|profil)>' => 'user/default/<_a>',
+
                 '<controller:\w+>/page/<page:\d+>' => '<controller>/index',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:\w+>/'=>'<controller>/index',
