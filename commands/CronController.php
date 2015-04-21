@@ -50,7 +50,7 @@ class CronController extends Controller{
             $transaction = \Yii::$app->db->beginTransaction();
 
             //укажим имя файла результата
-            $this->result_file = md5(time()).'.txt';
+            //$this->result_file = md5(time()).'.txt';
 
             try {
 
@@ -101,8 +101,8 @@ class CronController extends Controller{
         $this->task = $this->findTask();
 
         //удалим файл результата, если он существует
-        if(file_exists(\Yii::getAlias('@taskDirFile').$this->result_file)){
-            unlink((\Yii::getAlias('@taskDirFile').$this->result_file));
+        if(file_exists(\Yii::getAlias('@taskDirFile').'/'.$this->task->link.'.txt')){
+            unlink((\Yii::getAlias('@taskDirFile').'/'.$this->task->link.'.txt'));
         }
 
         //изменим статус задания, чтобы пользователь УЖЕ не смог редактировать его
@@ -111,7 +111,7 @@ class CronController extends Controller{
         //формируем запрос к эластику на выборку данных
         $elastic = new Bulk();
 
-        $elastic->fileResult = \Yii::getAlias('@taskDirFile').$this->result_file;
+        $elastic->fileResult = \Yii::getAlias('@taskDirFile').'/'.$this->task->link.'.txt';
 
         $elastic->createQuery($this->task);
 
@@ -133,7 +133,7 @@ class CronController extends Controller{
         $query = \Yii::$app->db->createCommand($sql);
 
         //спишим с баланса юзера сумма за выборку
-        $query->bindValues([':status'=>Tasks::STATUS_COMPLETE,':id'=>$this->task->id,':file'=>$this->result_file, ':complete_at'=>time()]);
+        $query->bindValues([':status'=>Tasks::STATUS_COMPLETE,':id'=>$this->task->id,':file'=>$this->task->link.'.txt', ':complete_at'=>time()]);
 
         $query->execute();
 

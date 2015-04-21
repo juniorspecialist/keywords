@@ -64,6 +64,10 @@ AppAsset::register($this);
                         'url' => ['/tasks/'],
                         'visible'=>!Yii::$app->user->isGuest],
 
+                    ['label' => 'Тикеты',
+                        'url' => ['/ticket/'],
+                        'visible'=>!Yii::$app->user->isGuest],
+
                     Yii::$app->user->isGuest ?
                         ['label' => 'Регистрация', 'url' => ['/user/default/signup']] :
                         '',

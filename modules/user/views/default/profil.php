@@ -18,25 +18,20 @@ $this->params['breadcrumbs'][] = ['label' => 'Профиль'];
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'username',
             'email',
             'statusname',
-            //'balance',
-          //'balance:html',  // description attribute in HTML
-          [                    // the owner name of the model
+            [                    // the owner name of the model
               'label' => 'Баланс',
               'value' => $model->balance.' руб.',
-          ],
+            ],
             [
                 'label'=>'Зарегистрирован',
                 'value'=>date('Y-m-d H:i:s', $model->created_at)
             ],
-            //'',
-            //'created_at',
         ],
     ]) ?>
 

@@ -186,6 +186,13 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->getPrimaryKey();
     }
 
+    public static function getBalance(){
+        return Yii::$app->db
+            ->createCommand('SELECT balance FROM '.User::tableName().' WHERE id=:id')
+            ->bindValues([':id'=>Yii::$app->user->id])
+            ->queryScalar();
+    }
+
     /**
      * @inheritdoc
      */
