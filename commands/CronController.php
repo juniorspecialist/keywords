@@ -46,11 +46,11 @@ class CronController extends Controller{
 
         if (\Yii::$app->get('mutex')->acquire($this->tasks_mutex_name)) {
 
+            //изменим статус задания, чтобы пользователь УЖЕ не смог редактировать его
+            //Tasks::setStatus($this->task->id, Tasks::STATUS_IN_PROGRESS);
+
             //обернём в транзакцию все действия
             $transaction = \Yii::$app->db->beginTransaction();
-
-            //укажим имя файла результата
-            //$this->result_file = md5(time()).'.txt';
 
             try {
 
@@ -105,8 +105,6 @@ class CronController extends Controller{
             unlink((\Yii::getAlias('@taskDirFile').'/'.$this->task->link.'.txt'));
         }
 
-        //изменим статус задания, чтобы пользователь УЖЕ не смог редактировать его
-        Tasks::setStatus($this->task->id, Tasks::STATUS_IN_PROGRESS);
 
         //формируем запрос к эластику на выборку данных
         $elastic = new Bulk();
@@ -114,6 +112,8 @@ class CronController extends Controller{
         $elastic->fileResult = \Yii::getAlias('@taskDirFile').'/'.$this->task->link.'.txt';
 
         $elastic->createQuery($this->task);
+
+        $elastic->user_query->fields(['word']);
 
         $elastic->resultToFile();
 

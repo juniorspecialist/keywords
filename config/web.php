@@ -52,7 +52,7 @@ $config = [
         'elasticsearch' => [
             'class' => 'yii\elasticsearch\Connection',
             'nodes' => [
-                ['http_address' => '127.0.0.1:9200'],
+                ['http_address' => 'localhost:9200'],
                 // configure more hosts if you have a cluster
             ],
         ],
@@ -89,6 +89,7 @@ $config = [
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
+            //'class' => 'yii\caching\ApcCache',
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

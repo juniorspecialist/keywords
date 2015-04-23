@@ -1,29 +1,25 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alex
- * Date: 19.04.15
- * Time: 22:08
- */
 
-namespace app\modules\user\models;
+namespace app\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\user\models\User;
+use app\models\Ticket;
 
-class UserSearch extends User{
-
-
+/**
+ * TicketSearch represents the model behind the search form about `app\models\Ticket`.
+ */
+class TicketSearch extends Ticket
+{
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['status','balance'], 'integer'],
-            [['status', 'email', 'username','balance'], 'safe'],
+            [['id', 'user_id', 'status', 'created_at'], 'integer'],
+            [['theme', 'question'], 'safe'],
         ];
     }
 
@@ -45,27 +41,32 @@ class UserSearch extends User{
      */
     public function search($params)
     {
-        $query = User::find();
+        $query = Ticket::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=>false
         ]);
 
         $this->load($params);
 
         if (!$this->validate()) {
-
             // uncomment the following line if you do not want to any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['status' => $this->status]);
+        //пользователь видит только свои заявки, админ видит все заявки
+        if(!Yii::$app->user->identity->isAdmin()){
+            $query->andFilterWhere(['user_id'=>$this->user_id]);
+        }
 
-        $query->andFilterWhere(['like', 'email', $this->email]);
+        $query->andFilterWhere([
+            //'id' => $this->id,
+            'status' => $this->status,
+            'created_at' => $this->created_at,
+        ]);
 
-        $query->andFilterWhere(['like', 'username', $this->username]);
+        $query->andFilterWhere(['like', 'theme', $this->theme]);
 
         return $dataProvider;
     }
