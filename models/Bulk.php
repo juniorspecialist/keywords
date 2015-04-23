@@ -20,6 +20,10 @@ class Bulk extends \yii\elasticsearch\ActiveRecord{
 
     public $fileResult;//файл результата куда пишим итоговые данные по заданию
 
+    public $scroll_id;//ID запроса, по которому получаем результат выборки, отправленной ранее через scroll/scan
+    public $scroll_total;//общее кол-во найденное значений при scroll/scan
+    public $scroll_write = 0;//кол-во значений записанное в файл, при croll/scan
+
     /**
      * @return array the list of attributes for this record
      */
@@ -209,4 +213,100 @@ class Bulk extends \yii\elasticsearch\ActiveRecord{
             unset($data);
         }
     }
+
+    /*
+     * scroll/scan http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-search-type.html#scan
+     */
+    public function scrollScan(){
+        //сперва отправляем запрос на формирование данных:по сколько данных получаем, сам запрос выборки+д.р. параметры
+        // в ответ получаем ID, по которому будет получать результаты выборки
+        //пример адреса отправки запроса - localhost:9200/twitter/tweet/_search?scroll=1m&search_type=scan
+
+        if($this->user_query){
+
+            //$count_pages = round($total/Yii::$app->params['elastic.per_pages']);
+
+            $this->user_query->fields(['word']);
+
+            //$this->user_query->limit = 500;
+
+            $url = [static::index(), static::type(), '_search'];
+
+            $command = $this->user_query->createCommand();
+
+            $query = $command->queryParts;
+            if (empty($query)) {
+                $query = '{}';
+            }
+            if (is_array($query)) {
+                $query = Json::encode($query);
+            }
+
+            //спец. параметры для валидации
+            $options['scroll'] = '30s';//спустя 1минуту удаляем найденные данные
+            $options['search_type'] = 'scan';
+            $options['size']= 500;
+
+            $response = static::getDb()->get($url, $options, $query);
+
+
+            $this->scroll_id = $response['_scroll_id'];
+
+            //общее кол-во всех значений
+            $this->scroll_total = $response['hits']['total'];
+
+            //echo 'total='.$this->scroll_total.PHP_EOL;
+
+            unset($response);
+
+            //получем массив данных  - РЕЗУЛЬТАТОВ выборки
+
+            $this->scrollScanIteration();
+
+//            echo 'write_file='.$this->scroll_write.PHP_EOL;
+//            echo 'memory_get_peak_usage='.memory_get_peak_usage(true);
+        }
+    }
+
+    /*
+     * блоками/кусками получаем результаты ранее отправленного запроса на выборку
+     * примерно адреса, для получения данных - http://10.0.2.15:9200/_search/scroll?scroll=10s&scroll_id=c2Nhb[...]zk7
+     */
+    public function scrollScanIteration(){
+
+        //echo 'scrol_id='.$this->scroll_id.PHP_EOL;
+
+        $url = ['_search','scroll'];
+
+        //спец. параметры для валидации
+        $options['scroll'] = '30s';//спустя 1минуту удаляем найденные данные
+        $options['scroll_id'] = $this->scroll_id;
+
+        $response = static::getDb()->get($url, $options, null);
+
+        $this->scroll_id = $response['_scroll_id'];
+
+        $continue = false;
+
+        if(!empty($response['hits']['hits'])){
+
+            $continue = true;
+
+            foreach($response['hits']['hits'] as $j=>$keyword){
+
+                file_put_contents($this->fileResult, $keyword['fields']['word'][0], FILE_APPEND);
+
+                //$this->scroll_write++;
+
+                unset($response['hits']['hits'][$j]);
+            }
+            unset($response);
+        }
+
+        if($continue==true){
+            //отправляем запрос на получение следующих данных
+            $this->scrollScanIteration();
+        }
+    }
+
 }
