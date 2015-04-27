@@ -197,18 +197,5 @@ class DefaultController extends Controller
         }
     }
 
-    /*
-     * список всех пользователей системы
-     */
-    public function actionAdmin(){
 
-        $searchModel = new UserSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return
-            $this->render('users_table',[
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
 }

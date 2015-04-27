@@ -46,8 +46,9 @@ class CronController extends Controller{
 
         if (\Yii::$app->get('mutex')->acquire($this->tasks_mutex_name)) {
 
-            //изменим статус задания, чтобы пользователь УЖЕ не смог редактировать его
-            //Tasks::setStatus($this->task->id, Tasks::STATUS_IN_PROGRESS);
+
+            //находим первые в списке очереди задачи по выборке
+            $this->task = $this->findTask();
 
             //обернём в транзакцию все действия
             $transaction = \Yii::$app->db->beginTransaction();
@@ -83,22 +84,6 @@ class CronController extends Controller{
      * формируем файл с данные - результатами выборки
      */
     public function TaskStart(){
-        /*
-         * ссылки на доки эластика для запросов
-         * http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-filtered-query.html
-         * http://stackoverflow.com/questions/28001632/filter-items-which-array-contains-any-of-given-values
-         * https://www.elastic.co/blog/quick-tips-regex-filter-buckets
-         * http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html
-         * http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html#regexp-syntax
-         * http://www.elastic.co/guide/en/elasticsearch/reference/1.4/query-dsl-common-terms-query.html
-         * https://www.elastic.co/blog/stop-stopping-stop-words-a-look-at-common-terms-query/
-         * http://www.elastic.co/guide/en/elasticsearch/guide/current/_more_complicated_searches.html
-         * http://www.elastic.co/guide/en/elasticsearch/guide/current/_full_text_search.html
-         * http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-filtered-query.html
-         */
-
-        //находим первые в списке очереди задачи по выборке
-        $this->task = $this->findTask();
 
         //удалим файл результата, если он существует
         if(file_exists(\Yii::getAlias('@taskDirFile').'/'.$this->task->link.'.txt')){
@@ -113,9 +98,11 @@ class CronController extends Controller{
 
         $elastic->createQuery($this->task);
 
-        $elastic->user_query->fields(['word']);
+        //$elastic->user_query->fields(['word']);
 
-        $elastic->resultToFile();
+        //$elastic->resultToFile();
+        //получаем данные порциями, типа через Итератор-эластика и пишим в файл
+        $elastic->scrollScan();
 
         unset($elastic->user_query);
     }

@@ -224,11 +224,7 @@ class Bulk extends \yii\elasticsearch\ActiveRecord{
 
         if($this->user_query){
 
-            //$count_pages = round($total/Yii::$app->params['elastic.per_pages']);
-
             $this->user_query->fields(['word']);
-
-            //$this->user_query->limit = 500;
 
             $url = [static::index(), static::type(), '_search'];
 
@@ -243,9 +239,9 @@ class Bulk extends \yii\elasticsearch\ActiveRecord{
             }
 
             //спец. параметры для валидации
-            $options['scroll'] = '30s';//спустя 1минуту удаляем найденные данные
+            $options['scroll'] = '60s';//спустя 1минуту удаляем найденные данные
             $options['search_type'] = 'scan';
-            $options['size']= 500;
+            $options['size']= 300;
 
             $response = static::getDb()->get($url, $options, $query);
 
@@ -279,7 +275,7 @@ class Bulk extends \yii\elasticsearch\ActiveRecord{
         $url = ['_search','scroll'];
 
         //спец. параметры для валидации
-        $options['scroll'] = '30s';//спустя 1минуту удаляем найденные данные
+        $options['scroll'] = '60s';//спустя 1минуту удаляем найденные данные
         $options['scroll_id'] = $this->scroll_id;
 
         $response = static::getDb()->get($url, $options, null);

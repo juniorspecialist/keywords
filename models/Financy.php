@@ -45,7 +45,7 @@ class Financy extends \yii\db\ActiveRecord
     }
 
 
-    public function getType(){
+    public function getTypeOperation(){
 
         $list = Financy::getTypeOperations();
 

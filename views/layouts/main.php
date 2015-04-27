@@ -45,8 +45,9 @@ AppAsset::register($this);
                     ['label' => 'Контакты', 'url' => ['/site/contact']],
 
                     ['label' => 'Пользователи',
-                        'url' => ['/user/default/admin/'],
-                        'visible'=>Yii::$app->user->identity && Yii::$app->user->identity->isAdmin()],
+                        'url' => ['/user/admin/'],
+                        'visible'=>Yii::$app->user->identity && Yii::$app->user->identity->isAdmin()
+                    ],
 
                     [
                         'label'=>'Профиль',
@@ -66,6 +67,10 @@ AppAsset::register($this);
 
                     ['label' => 'Тикеты',
                         'url' => ['/ticket/'],
+                        'visible'=>!Yii::$app->user->isGuest],
+
+                    ['label' => 'Финансы',
+                        'url' => ['/financy/'],
                         'visible'=>!Yii::$app->user->isGuest],
 
                     Yii::$app->user->isGuest ?

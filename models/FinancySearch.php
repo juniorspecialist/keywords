@@ -48,6 +48,8 @@ class FinancySearch extends Financy
 
         $this->load($params);
 
+        $query->joinWith(['user']);
+
         if (!$this->validate()) {
             // uncomment the following line if you do not want to any records when validation fails
             // $query->where('0=1');
