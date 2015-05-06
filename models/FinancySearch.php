@@ -50,6 +50,15 @@ class FinancySearch extends Financy
 
         $query->joinWith(['user']);
 
+        $query->orderBy('financy.id DESC');
+
+        //если пользователь НЕ админ, показываем только его финансы
+        //if user not admin
+        if(!Yii::$app->user->identity->isAdmin()){
+            $query->andFilterWhere([
+                'user_id' => Yii::$app->user->id,
+            ]);
+        }
         if (!$this->validate()) {
             // uncomment the following line if you do not want to any records when validation fails
             // $query->where('0=1');

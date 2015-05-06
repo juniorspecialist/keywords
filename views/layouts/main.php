@@ -18,7 +18,7 @@ AppAsset::register($this);
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
+    <title><?= Yii::$app->name.Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
 <body>
@@ -28,7 +28,7 @@ AppAsset::register($this);
         <?php
         //TODO переделать меню под нормальный вид
             NavBar::begin([
-                'brandLabel' => Yii::$app->name,
+                'brandLabel' => 'MYKEYWORDS.RU',
                 'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
@@ -65,9 +65,9 @@ AppAsset::register($this);
                         'url' => ['/tasks/'],
                         'visible'=>!Yii::$app->user->isGuest],
 
-                    ['label' => 'Тикеты',
-                        'url' => ['/ticket/'],
-                        'visible'=>!Yii::$app->user->isGuest],
+//                    ['label' => 'Тикеты',
+//                        'url' => ['/ticket/'],
+//                        'visible'=>!Yii::$app->user->isGuest],
 
                     ['label' => 'Финансы',
                         'url' => ['/financy/'],
@@ -90,10 +90,13 @@ AppAsset::register($this);
 
         <div class="container">
             <?= Breadcrumbs::widget([
-                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+                'links' => isset($this->params['breadcrumbs'])&&(!Yii::$app->user->isGuest) ? $this->params['breadcrumbs'] : [],
             ]) ?>
 
-            <?= Alert::widget() ?>
+            <?php
+            Alert::widget()
+
+            ?>
 
             <?= $content ?>
 

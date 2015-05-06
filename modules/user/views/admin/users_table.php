@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'balance',
             // 'created_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            //['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
 

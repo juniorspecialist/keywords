@@ -70,4 +70,11 @@ class AdminController extends Controller{
                 'dataProvider' => $dataProvider,
             ]);
     }
+
+    /*
+     * редактирование данных пользователя
+     */
+    public function actionUpdate(){
+
+    }
 }

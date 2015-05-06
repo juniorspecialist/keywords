@@ -20,12 +20,13 @@ class TasksSearch extends Tasks
     {
         return [
 
-            [['desc','created_at','complete_at'], function ($attribute) {
+            [['desc'], function ($attribute) {//,'created_at','complete_at'
                 $this->$attribute = \yii\helpers\HtmlPurifier::process($this->$attribute);
             }],
 
             [['created_at','complete_at'], function ($attribute) {
-                if (!\DateTime::createFromFormat('Y-m-d', $attribute)){
+                //var_dump($attribute);die();
+                if (!\DateTime::createFromFormat('Y-m-d', $this->$attribute)){
                     $this->$attribute = time();
                 }else{
                     $this->$attribute = strtotime($this->$attribute);

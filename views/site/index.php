@@ -1,50 +1,82 @@
 <?php
 /* @var $this yii\web\View */
-$this->title = 'My Yii Application';
+//$this->title = 'My Yii Application';
 ?>
 <div class="site-index">
 
     <div class="jumbotron">
-        <h1>Congratulations!</h1>
+        <h1>Ключевые слова ВСЕМ</h1>
+        <p>
+            Онлайн база русских ключевых слов содержит <?=Yii::$app->params['count.keywords'];?> ключевых слова по январь 2015 года.
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
+        </p>
 
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
+        <p>
+        <?=\yii\helpers\Html::a('Регистрация',['/user/default/signup'], ['class'=>'btn btn-lg btn-success'])?>
+        </p>
     </div>
 
     <div class="body-content">
 
         <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
+            <div class="col-l">
+                <h2>Быстро</h2>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+                <p>С помощью продуманной структуры базы данных и оптимального хранения данных
+                    мы можем выполнять ваши задания по выборкам быстрее многих декстопных приложений.
+                    Скорость выполнения вашего задания зависит от нескольких моментов, на каком месте в общей очереди ваше задание и сколько результатов ключевых слов
+                    будет выбрано. То есть, чем больше результатов будет найдено, тем дольше будет происходить формирование результирующего файла.
+                    Несколько примеров, выборка с результатами примерно в 1 млн. ключей занимаем примерно 7-8 минут, это лишь время на сохранение файла.
+                </p>
 
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
             </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
+            <div class="col-1">
+                <h2>Дешево</h2>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+                <p>
+                    Мы предлагаем вам одну из самых низких цен за использование нашей услуги. Цена одной выборки всего лишь <?=Yii::$app->params['task.cost'];?> руб.
+                    Согласитесь цена максимально низкая, как для данной услуги.
+                </p>
 
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
             </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
+            <div class="col-1">
+                <h2>Удобно</h2>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
+                <p>Максимально простое управление системы, то есть сперва создаёте задание на выборку ключей по вашим правилам и после выполнения получаете,
+                    если надо уведомление о завершении на почту с ссылкой на файл результата. Мы знаем часто бывает так, что условия выборки были созданны с ошибкой и вы недовольны результатом,
+                    на этот случай мы добавили возможность подсчёта количества результатов в самой форме добавления задания, чтобы Вы могли понимать сколько результатов будет найдено.
+                    Вы можете не просто создавать условия выборки по чёткому совпадению фразы, но и с использованием упрощённого синтаксиса регулярных выражений,
+                    что позволяет более гибче и удобнее создавать условия. Также вы можете указать список стоп-слов, которые будут исключены из результатов выборки.
+                    То вы можете создать задание, а после его выполнения получите уведомление на почту с сылкой на результат.
+                    База будет регулярно обновляться, периодичность 4-5 месяцев.
+                    Нет необходимости носить с собой гигабайты данных и темболее платить за это, всегда с тобой, всегда под рукой.
+                    Это если вкрадце описать все те удобства, что вы получаете при использовании наего сервиса.
+                </p>
             </div>
+            <div class="col-1">
+                <h2>Преимущества перед другими системами и решениями</h2>
+
+                <p>
+                    Всё вышеперечисленное и есть наши преимущества. А также вам не надо хранить базу целиком, вы получаете лишь те данные, которые вам реально нужны.
+                    Более-менее свежие базы ключей занимают более 100 ГБ, не всем удобно хранить и работать с такими объёмами данных, поэтому куда проще и дешевле
+                    покупать не всю базу, а лишь необходимые данные. Вам не нужно следить за процессом выборки, в случае использования выборок на своей машине, а
+                    вдруг вы ошиблись в условиях выборки ? Тогда вам предстоит снова запускать и ждать и ждать, мы же вам предлагаем при создании задания на выборку
+                    не просто указать список ключевых слов, но и использовать синтаксис упрощённых регулярных выражений для достижения максимальной гибкости в условиях,
+                    плюс к этому уже на этапе создания задания увидить сколько результатов будет найдено по вашим условиям. Мы решили не использовать абонплату, платите лишь за
+                    те данные, что вам нужны.
+                </p>
+
+            </div>
+            <div class="col-1">
+                <h2>Недостатки</h2>
+
+                <p>
+                    Есть и недостатки, это количество данных по ключам, то есть вы получаете в итоге текстовый файл, в котором будут ключевые слова,
+                    без каких-либо статистических данных
+                </p>
+
+            </div>
+
         </div>
 
     </div>

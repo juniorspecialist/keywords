@@ -11,7 +11,7 @@ $config = [
 
     'bootstrap' => ['log','debug'],//,
 
-    'name'=>'MYKEYWORDS.RU',
+    'name'=>'Сервис выборки ключевых слов - MYKEYWORDS.RU',
 
     'timeZone'=>'Europe/Moscow',
 
@@ -78,6 +78,8 @@ $config = [
                 '<controller:\w+>/<action:\w+>/<file:\w+>' => '<controller>/<action>',
 
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
 
                 '<controller:\w+>/'=>'<controller>/index',
 

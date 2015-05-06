@@ -40,13 +40,13 @@ class Ticket extends \yii\db\ActiveRecord
     {
         return [
             [['theme', 'question'], 'required'],
-            [['user_id', 'status', 'created_at'], 'integer'],
+            [['user_id', 'status', 'created_at','updated_at'], 'integer'],
             [['question'], 'string'],
             [['theme'], 'string', 'max' => 250],
 
             [['user_id'], 'default', 'value'=>Yii::$app->user->id],
             [['status'], 'default', 'value'=>self::STATUS_OPEN],
-            [['created_at'], 'default', 'value'=>time()],
+            [['created_at','updated_at'], 'default', 'value'=>time()],
         ];
     }
 
@@ -64,6 +64,7 @@ class Ticket extends \yii\db\ActiveRecord
             'created_at' => 'Создан',
             'question' => 'Вопрос',
             'ticketanswers'=>'Ответы на тикет',
+            'updated_at'=>'Обновлен'
         ];
     }
 
@@ -98,5 +99,36 @@ class Ticket extends \yii\db\ActiveRecord
             self::STATUS_OPEN=>'Открыт',
             self::STATUS_CLOSE=>'Закрыт',
         ];
+    }
+
+    /*
+     * меняем статус тикета
+     * после изменения статус тикета - отправляем уведомление другому участнику тикета на почту с ссылкой
+     */
+    public function setStatusTicket($new_status){
+
+        //определяем роль пользователя
+        if(Yii::$app->user->identity && Yii::$app->user->identity->isAdmin()){//ADMIN
+            $email_to = $this->user->email;
+            $email_from = Yii::$app->params['adminEmail'];
+            $name_from = $this->user->username;
+            $user = $this->user;;
+        }else{//user
+            $email_to = Yii::$app->params['adminEmail'];
+            $email_from = $this->user->email;
+            $name_from = 'Admin';
+            $user = User::findOne(['id'=>Yii::$app->user->id]);
+        }
+
+        Yii::$app->mailer->compose('changeTicketStatus', ['ticket' => $this, 'user'=>$user])
+            ->setFrom([$email_from => Yii::$app->name])
+            ->setTo($this->email)
+            ->setSubject('Изменился статус тикета  №' . $this->id)
+            ->send();
+
+        /*Yii::$app->db->createCommand('UPDATE '.Ticket::tableName(). ' SET status=:status, id=:id, updated_at=:updated_at')
+            ->bindValues([':status'=>$new_status, ':id'=>$this->id,':updated_at'=>time()])
+            ->execute();
+        */
     }
 }

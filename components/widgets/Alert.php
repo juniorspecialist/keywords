@@ -8,6 +8,8 @@
 
 namespace app\components\widgets;
 
+use kartik\growl\Growl;
+
 
 class Alert extends \yii\bootstrap\Widget
 {
@@ -42,11 +44,44 @@ class Alert extends \yii\bootstrap\Widget
                     $this->options['class'] = $this->alertTypes[$type] . $appendCss;
                     /* assign unique id to each alert box */
                     $this->options['id'] = $this->getId() . '-' . $type . '-' . $i;
+
+                    echo Growl::widget([
+
+                        'body' => $message,
+                        'closeButton' => $this->closeButton,
+                        'options' => $this->options,
+                        'delay' => false,
+                        'pluginOptions' => [
+                            //'icon_type'=>'image',
+                            'showProgressbar' => false,
+                            'placement' => [
+                                'from' => 'top',
+                                'align' => 'right',
+                            ],
+                        ]
+//                        'type' => Growl::TYPE_MINIMALIST,
+//                        'title' => 'Kartik Visweswaran',
+//                        'icon' => '/images/kartik.png',
+//                        'iconOptions' => ['class'=>'img-circle pull-left'],
+//                        'body' => 'Momentum reduce child mortality effectiveness incubation empowerment connect.',
+//                        'showSeparator' => false,
+//                        'delay' => 7500,
+//                        'pluginOptions' => [
+//                            'icon_type'=>'image',
+//                            'showProgressbar' => false,
+//                            'placement' => [
+//                                'from' => 'top',
+//                                'align' => 'right',
+//                            ],
+//                        ]
+                    ]);
+                    /*
                     echo \yii\bootstrap\Alert::widget([
                         'body' => $message,
                         'closeButton' => $this->closeButton,
                         'options' => $this->options,
-                    ]);
+
+                    ]);*/
                 }
                 $session->removeFlash($type);
             }
