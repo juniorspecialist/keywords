@@ -40,9 +40,9 @@ AppAsset::register($this);
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
-                    ['label' => 'Главная', 'url' => ['/site/index']],
-                    ['label' => 'О нас', 'url' => ['/site/about']],
-                    ['label' => 'Контакты', 'url' => ['/site/contact']],
+                    ['label' => 'Главная', 'url' => ['/site/index'],'visible'=>Yii::$app->user->isGuest,],
+                    ['label' => 'О нас', 'url' => ['/site/about'],'visible'=>Yii::$app->user->isGuest,],
+                    ['label' => 'Контакты', 'url' => ['/site/contact'],'visible'=>Yii::$app->user->isGuest,],
 
                     ['label' => 'Пользователи',
                         'url' => ['/user/admin/'],
@@ -65,9 +65,9 @@ AppAsset::register($this);
                         'url' => ['/tasks/'],
                         'visible'=>!Yii::$app->user->isGuest],
 
-//                    ['label' => 'Тикеты',
-//                        'url' => ['/ticket/'],
-//                        'visible'=>!Yii::$app->user->isGuest],
+                    ['label' => 'Тикеты',
+                        'url' => ['/ticket/'],
+                        'visible'=>!Yii::$app->user->isGuest],
 
                     ['label' => 'Финансы',
                         'url' => ['/financy/'],

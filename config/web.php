@@ -9,7 +9,7 @@ $config = [
 
     'basePath' => dirname(__DIR__),
 
-    'bootstrap' => ['log','debug'],//,
+    'bootstrap' => ['log','debug','gii'],//,
 
     'name'=>'Сервис выборки ключевых слов - MYKEYWORDS.RU',
 
@@ -38,15 +38,39 @@ $config = [
         'user' => [
             'class' => 'app\modules\user\Module',
         ],
+
+        'pay' => [
+            'class' => 'app\modules\pay\Module',
+        ],
+
+        'ticket' => [
+            'class' => 'app\modules\ticket\Module',
+        ],
     ],
 
     'components' => [
+
+        'robokassa' => [
+            'class' => 'app\models\Robokassa',
+            'sMerchantLogin' => 'Mykeywordsru',
+            'sMerchantPass1' => 'paroler159753',
+            'sMerchantPass2' => 'paroler123',
+            'testMode'=>true,//используем тестовый режим для отладки
+        ],
 
         'user' => [
             'identityClass' => 'app\modules\user\models\User',
             'enableAutoLogin' => true,
             'loginUrl' => ['user/default/login'],
             //'admins'=>['admin'],
+        ],
+
+        'formatter' => [
+            'dateFormat' => 'dd.MM.yyyy',
+            'locale'=>'ru-RU',
+            'decimalSeparator' => ',',
+            'thousandSeparator' => ' ',
+            //'currencyCode' => 'EUR',
         ],
 
         'elasticsearch' => [
@@ -57,36 +81,26 @@ $config = [
             ],
         ],
 
+        'assetManager' => [
+            'bundles' => [
+//                'yii\web\JqueryAsset' => [
+//                    'js'=>[]
+//                ],
+//                'yii\bootstrap\BootstrapPluginAsset' => [
+//                    'js'=>[]
+//                ],
+                'yii\bootstrap\BootstrapAsset' => [
+                    'css' => []
+                ]
+            ]
+        ],
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            //'enableStrictParsing' => true,
-            'rules' => [
+            'enableStrictParsing' => true,
 
-                '' => 'site/index',
-                'about'=>'site/about',
-                'contact'=>'site/contact',
-
-                '<_a:(login|logout|signup|confirm-email|request-password-reset|reset-password|change-password|profil)>' => 'user/default/<_a>',
-
-                '<controller:\w+>/page/<page:\d+>' => '<controller>/index',
-
-                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
-
-                '<controller:\w+>/<action:\w+>/<link:\w+>' => '<controller>/<action>',
-
-                '<controller:\w+>/<action:\w+>/<file:\w+>' => '<controller>/<action>',
-
-                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
-
-                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
-
-                '<controller:\w+>/'=>'<controller>/index',
-
-                '<module:\w+>/<controller:\w+>/<action:\w+>'=>'<module>/<controller>/<action>',
-
-                '<module:\w+>/<controller:\w+>/'=>'<module>/<controller>/index',
-            ],
+            'rules' => require(__DIR__ . '/urls.php'),
         ],
 
         'request' => [

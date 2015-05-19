@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Профиль'];
             [                    // the owner name of the model
                 'label' => 'Баланс',
                 'format'=>'raw',
-                'value' => $model->balance.' руб.  '. Html::a('Пополнить баланса', Yii::$app->urlManager->createAbsoluteUrl(['/financy/create']), ['target'=>'blank']),
+                'value' => $model->balance.' руб.  '. Html::a('Пополнить баланса', Yii::$app->urlManager->createAbsoluteUrl(['/financy/']), ['target'=>'blank']),
             ],
             [
                 'label'=>'Зарегистрирован',

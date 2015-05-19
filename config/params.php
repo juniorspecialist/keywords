@@ -14,5 +14,7 @@ return [
     'elastic.per_pages'=>10000,//по сколько результатов читать при запросе на выборку, для сохранения в файл
     //'task.path.result.files'=>\Yii::getAlias('@app/runtime/result_files/'),
     'task.count.time.interval'=>10,
-    'count.keywords'=>1328134024//общее кол-во ключевых слов
+    'count.keywords'=>1328134024,//общее кол-во ключевых слов
+
+    'max.count.open.ticket'=>2,//максимальное кол-во открытых тикетов по юзеру
 ];

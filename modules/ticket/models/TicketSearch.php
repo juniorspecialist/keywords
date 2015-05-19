@@ -1,11 +1,11 @@
 <?php
 
-namespace app\models;
+namespace app\modules\ticket\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Ticket;
+use app\modules\ticket\models\Ticket;
 
 /**
  * TicketSearch represents the model behind the search form about `app\models\Ticket`.
@@ -48,6 +48,7 @@ class TicketSearch extends Ticket
         ]);
 
         $this->load($params);
+        $query->joinWith(['user']);
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to any records when validation fails
@@ -67,6 +68,8 @@ class TicketSearch extends Ticket
         ]);
 
         $query->andFilterWhere(['like', 'theme', $this->theme]);
+
+        $query->orderBy('updated_at DESC');
 
         return $dataProvider;
     }

@@ -140,10 +140,17 @@ class User extends ActiveRecord implements IdentityInterface
 
     /*
      * check is admin user or not
+     * $username - если не указан юзер. то проверяем по текущему юзеру
      */
-    public function isAdmin(){
+    public function isAdmin($username = ''){
+
         if(!Yii::$app->user->isGuest){
-            if(in_array(Yii::$app->user->identity->username, Yii::$app->user->identity->admins)){
+
+            if(empty($username)){
+                $username = Yii::$app->user->identity->username;
+            }
+
+            if(in_array($username, Yii::$app->user->identity->admins)){
                 return true;
             }
         }

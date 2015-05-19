@@ -36,18 +36,18 @@ class Bulk extends \yii\elasticsearch\ActiveRecord{
     /**
      * @return string the name of the index this record is stored in.
      */
-    public static function index()
-    {
-        return '_all';//'_all';
-    }
+//    public static function index()
+//    {
+//        return '_all';//'_all';
+//    }
 
     /**
      * @return string the name of the type this record is stored in.
      */
-    public static function type()
-    {
-        return ['bulk','word'];
-    }
+//    public static function type()
+//    {
+//        return ['bulk','word'];
+//    }
 
 
     /*
@@ -241,7 +241,7 @@ class Bulk extends \yii\elasticsearch\ActiveRecord{
             //спец. параметры для валидации
             $options['scroll'] = '60s';//спустя 1минуту удаляем найденные данные
             $options['search_type'] = 'scan';
-            $options['size']= 300;
+            //$options['size']= 100;
 
             $response = static::getDb()->get($url, $options, $query);
 

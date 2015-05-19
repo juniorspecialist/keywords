@@ -18,7 +18,7 @@ class FinancySearch extends Financy
     public function rules()
     {
         return [
-            [['id', 'user_id', 'type_operation', 'sum_operation', 'balance_user_after_operation', 'created_at'], 'integer'],
+            [['id', 'user_id', 'type_operation', 'sum_operation', 'created_at'], 'integer'],
         ];
     }
 
@@ -48,17 +48,24 @@ class FinancySearch extends Financy
 
         $this->load($params);
 
-        $query->joinWith(['user']);
-
-        $query->orderBy('financy.id DESC');
-
         //если пользователь НЕ админ, показываем только его финансы
         //if user not admin
-        if(!Yii::$app->user->identity->isAdmin()){
+        if(Yii::$app->user->identity->isAdmin()){
+
+            $query->joinWith(['user']);
+
+
+
+//            $query->andFilterWhere([
+//                'user_id' => Yii::$app->user->id,
+//            ]);
+        }else{
             $query->andFilterWhere([
                 'user_id' => Yii::$app->user->id,
             ]);
         }
+
+        $query->orderBy('financy.id DESC');
         if (!$this->validate()) {
             // uncomment the following line if you do not want to any records when validation fails
             // $query->where('0=1');
@@ -70,7 +77,6 @@ class FinancySearch extends Financy
             'user_id' => $this->user_id,
             'type_operation' => $this->type_operation,
             'sum_operation' => $this->sum_operation,
-            'balance_user_after_operation' => $this->balance_user_after_operation,
             'created_at' => $this->created_at,
         ]);
 

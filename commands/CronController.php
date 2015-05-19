@@ -179,4 +179,71 @@ class CronController extends Controller{
         }
         echo PHP_EOL;
     }
+
+    /*
+     * читаем текстовый файлик и пишим данные в эластик
+     */
+    public function actionWrite(){
+        //
+        //$this->readfile('12.txt'); sleep(5);
+        //$this->readfile('13.txt'); sleep(5);
+        //$this->readfile('14.txt'); sleep(5);
+        //$this->readfile('15.txt'); sleep(5);
+
+        //$this->readfile('16.txt'); sleep(5);
+        //$this->readfile('17.txt'); sleep(5);
+        //$this->readfile('18.txt'); sleep(5);
+        //$this->readfile('19.txt'); sleep(5);
+        //$this->readfile('22_.txt'); sleep(5);
+        //$this->readfile('21_.txt'); sleep(5);
+        //$this->readfile('22_.txt'); sleep(5);
+        //$this->readfile('23_.txt'); sleep(5);
+        //$this->readfile('24_.txt'); sleep(5);
+
+        //$this->readfile('28_.txt'); sleep(5);
+        //$this->readfile('29_.txt'); sleep(5);
+
+        //$this->readfile('38_.txt'); sleep(5);
+        $this->readfile('39_.txt'); sleep(5);
+        $this->readfile('40_.txt'); sleep(5);
+        $this->readfile('41_.txt'); sleep(5);
+        $this->readfile('42_.txt'); sleep(5);
+        $this->readfile('43_.txt'); sleep(5);
+        $this->readfile('44_.txt'); sleep(5);
+        $this->readfile('45_.txt'); sleep(5);
+        $this->readfile('46_.txt'); sleep(5);
+        $this->readfile('47_.txt'); sleep(5);
+        $this->readfile('48_.txt'); sleep(5);
+        $this->readfile('49_.txt'); sleep(5);
+        $this->readfile('50_.txt'); sleep(5);
+    }
+
+    public function readfile($name){
+        $data_send = '';
+        $handle = fopen('/var/www/keywords/web/'.$name, "r") or die("Couldn't get handle");
+        if ($handle){
+            $bulk = new \app\models\Bulk();
+            $i=1;
+            while (!feof($handle)) {
+                $i++;
+                
+                //if($skip){
+                    //if($i<4267782570){continue;}
+                //}
+                $buffer = fgets($handle, 4096);
+                $data_send.=json_encode(['index'=>array('_id' => md5($buffer))]). "\n".json_encode(['word'=>$buffer]). "\n";
+                if($i%300==0){
+                    $bulk->multiCreate($data_send);
+                    unset($data_send);
+                    $data_send = '';
+                }
+            }
+            fclose($handle);
+            $bulk->multiCreate($data_send);
+            unset($handle);
+            unset($bulk);
+            @unlink('/var/www/keywords/web/'.$name);
+            $this->stdout($name.PHP_EOL, Console::FG_GREEN, Console::BOLD);
+        }
+    }
 }

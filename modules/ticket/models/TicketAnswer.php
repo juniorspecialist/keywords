@@ -1,8 +1,9 @@
 <?php
 
-namespace app\models;
+namespace app\modules\ticket\models;
 
 use Yii;
+use \app\modules\user\models\User;
 
 /**
  * This is the model class for table "ticket_answer".
@@ -32,9 +33,18 @@ class TicketAnswer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'aswer', 'created_at', 'ticket_id'], 'required'],
+            //значения по умолчанию
+            [['created_at'], 'default', 'value'=>time()],//
+            [['user_id'], 'default', 'value'=>Yii::$app->user->id],//
+
+            [['user_id', 'answer', 'created_at', 'ticket_id'], 'required'],
             [['user_id', 'created_at', 'ticket_id'], 'integer'],
-            [['aswer'], 'string']
+            [['answer'], 'string'],
+
+            [['answer'], function ($attribute) {
+                $this->$attribute = \yii\helpers\HtmlPurifier::process($this->$attribute);
+            }],
+
         ];
     }
 
@@ -45,10 +55,10 @@ class TicketAnswer extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_id' => 'User ID',
-            'aswer' => 'Aswer',
-            'created_at' => 'Created At',
-            'ticket_id' => 'Ticket ID',
+            'user_id' => 'Пользователь',
+            'answer' => 'Текст ответа',
+            'created_at' => 'Добавлено',
+            'ticket_id' => 'Тикет',
         ];
     }
 

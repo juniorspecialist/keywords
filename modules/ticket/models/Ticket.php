@@ -1,10 +1,10 @@
 <?php
 
-namespace app\models;
+namespace app\modules\ticket\models;
 
 use Yii;
 use app\modules\user\models\User;
-use app\models\TicketAnswer;
+use app\modules\ticket\models\TicketAnswer;
 
 /**
  * This is the model class for table "ticket".
@@ -40,14 +40,41 @@ class Ticket extends \yii\db\ActiveRecord
     {
         return [
             [['theme', 'question'], 'required'],
-            [['user_id', 'status', 'created_at','updated_at'], 'integer'],
-            [['question'], 'string'],
-            [['theme'], 'string', 'max' => 250],
+            [['user_id', 'status', 'created_at','updated_at','view_admin', 'view_user'], 'integer'],
+            [['question'], 'string', 'min'=>5],
+            [['theme'], 'string', 'max' => 250,'min'=>5],
+
+            //проверка кол-ва открытых тикетов у юзера
+            [['theme'], 'limitTicket'],
+
+            //после добавления тикета выделим его для админа
+            [['view_admin'], 'default', 'value'=>0],//админ не просмотрел,
+            [['view_user'], 'default', 'value'=>1],//дя юзера он не новый тикет
 
             [['user_id'], 'default', 'value'=>Yii::$app->user->id],
             [['status'], 'default', 'value'=>self::STATUS_OPEN],
             [['created_at','updated_at'], 'default', 'value'=>time()],
+
+            [['theme', 'question'], function ($attribute) {
+                $this->$attribute = \yii\helpers\HtmlPurifier::process($this->$attribute);
+            }],
         ];
+    }
+
+    /*
+     * кол-во открытых тикетов по юзеру
+     */
+    public function limitTicket(){
+
+        if(!$this->hasErrors()){
+            $count = Yii::$app->db->createCommand('SELECT COUNT(id) as count FROM ticket WHERE user_id=:user_id AND status=:status')
+                ->bindValues([':user_id'=>Yii::$app->user->id,':status'=>Ticket::STATUS_OPEN])
+                ->queryScalar();
+            if(Yii::$app->params['max.count.open.ticket']==$count){
+                $this->addError('theme','У вас уже есть '.$count.' открытых тикета, чтобы открыть ещё, надо закрыть их.');
+            }
+        }
+
     }
 
     /**
@@ -85,6 +112,14 @@ class Ticket extends \yii\db\ActiveRecord
     }
 
     /*
+     * получамм список ответов по тикету с данными по юзерам
+     */
+//    public function getTicketAnswersWithUsers(){
+//        return $this->hasMany(User::className(), ['id' => 'user_id'])->viaTable(TicketAnswer::tableName(),['ticket_id'=>'id']);
+//        //return $this->hasMany(Category::className(), ['id' => 'category_id'])->viaTable(GameCategory::tableName(), ['game_id'=>'id']);
+//    }
+
+    /*
      * определяем статус тикета
      */
     public function getStatusName(){
@@ -99,6 +134,18 @@ class Ticket extends \yii\db\ActiveRecord
             self::STATUS_OPEN=>'Открыт',
             self::STATUS_CLOSE=>'Закрыт',
         ];
+    }
+
+    /*
+     * кол-во не просмотренных тикетов по юзеру(админ или юзер)
+     */
+    public function getNotviews(){
+        //для админа
+        if(Yii::$app->user->identity->isAdmin()){
+
+        }else{
+
+        }
     }
 
     /*
