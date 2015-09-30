@@ -2,7 +2,7 @@
 
 //установим путь к каталогу для хранения файлов результатов - заданий выборок
 Yii::setAlias('@taskDirFile', dirname(__DIR__) . '/runtime/result_files/');
-
+//тестовый коммент
 
 return [
     'adminEmail' => '',
